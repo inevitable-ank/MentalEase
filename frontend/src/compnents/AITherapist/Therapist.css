@@ -1,0 +1,132 @@
+.therapist-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 30px;
+  background: linear-gradient(to right, #E0F7FA, #B2EBF2); /* Light gradient background */
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  margin-top: 60px;
+  transition: all 0.3s ease-in-out;
+}
+
+.therapist-container:hover {
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15); /* Hover effect */
+}
+
+.heading {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 24px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.chat-box {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 55vh; /* Slightly larger height */
+}
+
+.message {
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 20px;
+  max-width: 80%;
+  word-wrap: break-word;
+  display: inline-block;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.user-message {
+  background-color: #DCF8C6;
+  align-self: flex-end;
+  border-radius: 12px;
+}
+
+.ai-message {
+  background-color: #E1F3FB;
+  align-self: flex-start;
+  border-radius: 12px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.input-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.input-field {
+  flex-grow: 1;
+  padding: 12px;
+  border: 2px solid #E0E0E0;
+  border-radius: 25px;
+  margin-right: 15px;
+  font-size: 1.1rem;
+  transition: border-color 0.3s ease;
+}
+
+.input-field:focus {
+  border-color: #007BFF;
+  outline: none;
+}
+
+.send-button {
+  padding: 12px 24px;
+  background-color: #007BFF;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.send-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px); /* Slight hover effect */
+}
+
+.send-button:active {
+  transform: translateY(1px); /* Active button effect */
+}
+
+/* Responsive design adjustments */
+@media screen and (max-width: 768px) {
+  .therapist-container {
+    padding: 20px;
+    margin-top: 50px;
+  }
+
+  .heading {
+    font-size: 2rem;
+  }
+
+  .chat-box {
+    height: 50vh; /* Adjust for smaller screens */
+  }
+}
