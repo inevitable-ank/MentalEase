@@ -66,7 +66,7 @@ MentalEase is a comprehensive mental health application built using the MERN sta
 ![Anonymous Post](./Screenshots/AnonymusPost.png)
 
 ### New Post
-![New Post](./Screenshots/NewPost.png.png)
+![New Post](./Screenshots/NewPost.png)
 
 ### Post Platform
 ![Post Platform](./Screenshots/Postplat.png)
