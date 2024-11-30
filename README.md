@@ -34,3 +34,47 @@ MentalEase is a comprehensive mental health application built using the MERN sta
 - **RapidAPI:** Platform used to integrate the Gemini API for AI therapist and quiz responses.
 - **Gemini API:** Used for natural language processing to power the AI therapist and generate quiz feedback.
 
+## SCREENSHOTS
+
+### Sign Up
+![Signup](./Screenshots/Signup.png)
+
+### Login
+![Login](./Screenshots/Signin.png)
+
+### Home View 1
+![Home](./Screenshots/Home1.png)
+
+### Home View 2
+![Home](./Screenshots/Home2.png)
+
+### Home View 3
+![Home](./Screenshots/Home3.png)
+
+### Profile
+![Profile](./Screenshots/Profile.png)
+
+### Mood Tracker
+![Mood Tracker](./Screenshots/Screenshot%202024-11-30%20213017.png)
+
+### AI CHAT
+![AI](./Screenshots/ChatAI.png)
+
+### QUIZ
+![QUIZ](./Screenshots/Quiz.png)
+
+### Anonymous Post
+![Anonymous Post](./Screenshots/AnonymusPost.png)
+
+### New Post
+![New Post](./Screenshots/NewPost.png.png)
+
+### Post Platform
+![Post Platform](./Screenshots/Postplat.png)
+
+### Contact Us
+![Contact Us](./Screenshots/ContactUsform.png)
+
+### Access Denied
+![Access Denied](./Screenshots/Accessdenied.png)
+
