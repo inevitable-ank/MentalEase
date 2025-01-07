@@ -70,7 +70,7 @@ const AllAnonymousPost = () => {
   useEffect(() => {
     const fetchAnonymousPosts = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/anonymousPosts');
+        const response = await axios.get('https://mentalease.onrender.com/anonymousPosts');
         setAnonymousPosts(response.data);
       } catch (error) {
         console.error('Error fetching anonymous posts:', error);
