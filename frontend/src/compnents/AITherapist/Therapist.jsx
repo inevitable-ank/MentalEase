@@ -36,6 +36,13 @@ const Therapist = () => {
 
       // Replace **word** with <strong>word</strong>
       aiMessage = aiMessage.replace(/\*\*(.*?)\*\*/g, '$1');
+      
+      // Format the response with proper line breaks and paragraphs
+      aiMessage = aiMessage
+        .replace(/\n\n/g, '<br><br>')  // Double line breaks become paragraph breaks
+        .replace(/\n/g, '<br>')        // Single line breaks become line breaks
+        .replace(/\* /g, '• ')         // Convert bullet points
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Bold text
 
       // Simulate typing delay
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -70,7 +77,11 @@ const Therapist = () => {
         <div ref={chatBoxRef} className="chat-box">
           {messages.map((msg, index) => (
             <div key={index} className={`message ${msg.sender === 'user' ? 'user-message' : 'ai-message'}`}>
-              {msg.text}
+              {msg.sender === 'ai' ? (
+                <div dangerouslySetInnerHTML={{ __html: msg.text }} />
+              ) : (
+                msg.text
+              )}
             </div>
           ))}
           {loading && <TypingAnimation color="#007BFF" />}

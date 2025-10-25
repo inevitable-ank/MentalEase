@@ -57,8 +57,12 @@ const Quiz = () => {
       const response = await result.response;
       let text = await response.text();
   
-      // Replace **word** with <strong>word</strong>
-      text = text.replace(/\*\*(.*?)\*\*/g, '$1');
+      // Format the response with proper line breaks and paragraphs
+      text = text
+        .replace(/\n\n/g, '<br><br>')  // Double line breaks become paragraph breaks
+        .replace(/\n/g, '<br>')        // Single line breaks become line breaks
+        .replace(/\* /g, '• ')         // Convert bullet points
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Bold text
   
       setResult(text);
     } catch (error) {
@@ -114,7 +118,7 @@ const Quiz = () => {
         result && (
           <div className="mt-6 p-4 bg-gray-100 rounded-lg">
             <h2 className="text-xl font-semibold mb-4">Analysis Result</h2>
-            <p className="whitespace-pre-wrap">{result}</p>
+            <div dangerouslySetInnerHTML={{ __html: result }} />
           </div>
         )
       )}
