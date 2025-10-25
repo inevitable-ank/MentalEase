@@ -61,9 +61,10 @@ const Quiz = () => {
       text = text
         .replace(/\n\n/g, '<br><br>')  // Double line breaks become paragraph breaks
         .replace(/\n/g, '<br>')        // Single line breaks become line breaks
-        .replace(/\* /g, '• ')         // Convert bullet points
-        .replace(/\*([^*\n]+)\*/g, '<strong>$1</strong>') // Bold text with single asterisks
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Bold text with double asterisks
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold text with double asterisks first
+        .replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, '<strong>$1</strong>') // Bold text with single asterisks (not part of **)
+        .replace(/\* /g, '• ')         // Convert remaining bullet points
+        .replace(/\*+/g, '');          // Remove any remaining stray asterisks
   
       setResult(text);
     } catch (error) {
