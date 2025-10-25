@@ -51,14 +51,20 @@ const Quiz = () => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
       const prompt = `Analyze the following mental health quiz answers and generate a short summary regarding the persons mental health and what can he do, use points and headings and generate answer separated by paragraphs, also give a space between different paragraphs:\n\n${questions.map((q, i) => `${i+1}. ${q} ${answers[i]}`).join('\n')}`;
       const result = await model.generateContent(prompt);
       const response = await result.response;
       let text = await response.text();
   
-      // Replace **word** with <strong>word</strong>
-      text = text.replace(/\*\*(.*?)\*\*/g, '$1');
+      // Format the response with proper line breaks and paragraphs
+      text = text
+        .replace(/\n\n/g, '<br><br>')  // Double line breaks become paragraph breaks
+        .replace(/\n/g, '<br>')        // Single line breaks become line breaks
+        .replace(/\*\*(.*?)\*\*/g, '<span style="font-weight: 600;">$1</span>') // Lighter bold text with double asterisks
+        .replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, '<span style="font-weight: 600;">$1</span>') // Lighter bold text with single asterisks
+        .replace(/\* /g, '• ')         // Convert remaining bullet points
+        .replace(/\*+/g, '');          // Remove any remaining stray asterisks
   
       setResult(text);
     } catch (error) {
@@ -114,7 +120,7 @@ const Quiz = () => {
         result && (
           <div className="mt-6 p-4 bg-gray-100 rounded-lg">
             <h2 className="text-xl font-semibold mb-4">Analysis Result</h2>
-            <p className="whitespace-pre-wrap">{result}</p>
+            <div dangerouslySetInnerHTML={{ __html: result }} />
           </div>
         )
       )}

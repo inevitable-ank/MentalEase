@@ -28,14 +28,20 @@ const Therapist = () => {
     setLoading(true);
 
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
       const prompt = `Analyse the user's input and give suggestions or talk with them and provide an answer in paragraphs with spaces between paragraphs and points. Respond as if you are talking to the user in the first person, not the third person:\n\nUser: ${input}\nTherapist:`;
       const result = await model.generateContent(prompt);
       const response = await result.response;
       let aiMessage = await response.text();
 
-      // Replace **word** with <strong>word</strong>
-      aiMessage = aiMessage.replace(/\*\*(.*?)\*\*/g, '$1');
+      // Format the response with proper line breaks and paragraphs
+      aiMessage = aiMessage
+        .replace(/\n\n/g, '<br><br>')  // Double line breaks become paragraph breaks
+        .replace(/\n/g, '<br>')        // Single line breaks become line breaks
+        .replace(/\*\*(.*?)\*\*/g, '<span style="font-weight: 600;">$1</span>') // Lighter bold text with double asterisks
+        .replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, '<span style="font-weight: 600;">$1</span>') // Lighter bold text with single asterisks
+        .replace(/\* /g, '• ')         // Convert remaining bullet points
+        .replace(/\*+/g, '');          // Remove any remaining stray asterisks
 
       // Simulate typing delay
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -70,7 +76,11 @@ const Therapist = () => {
         <div ref={chatBoxRef} className="chat-box">
           {messages.map((msg, index) => (
             <div key={index} className={`message ${msg.sender === 'user' ? 'user-message' : 'ai-message'}`}>
-              {msg.text}
+              {msg.sender === 'ai' ? (
+                <div dangerouslySetInnerHTML={{ __html: msg.text }} />
+              ) : (
+                msg.text
+              )}
             </div>
           ))}
           {loading && <TypingAnimation color="#007BFF" />}
