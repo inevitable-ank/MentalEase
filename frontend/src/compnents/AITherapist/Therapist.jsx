@@ -38,8 +38,8 @@ const Therapist = () => {
       aiMessage = aiMessage
         .replace(/\n\n/g, '<br><br>')  // Double line breaks become paragraph breaks
         .replace(/\n/g, '<br>')        // Single line breaks become line breaks
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold text with double asterisks first
-        .replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, '<strong>$1</strong>') // Bold text with single asterisks (not part of **)
+        .replace(/\*\*(.*?)\*\*/g, '<span style="font-weight: 600;">$1</span>') // Lighter bold text with double asterisks
+        .replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, '<span style="font-weight: 600;">$1</span>') // Lighter bold text with single asterisks
         .replace(/\* /g, '• ')         // Convert remaining bullet points
         .replace(/\*+/g, '');          // Remove any remaining stray asterisks
 
