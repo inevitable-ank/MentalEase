@@ -34,15 +34,13 @@ const Therapist = () => {
       const response = await result.response;
       let aiMessage = await response.text();
 
-      // Replace **word** with <strong>word</strong>
-      aiMessage = aiMessage.replace(/\*\*(.*?)\*\*/g, '$1');
-      
       // Format the response with proper line breaks and paragraphs
       aiMessage = aiMessage
         .replace(/\n\n/g, '<br><br>')  // Double line breaks become paragraph breaks
         .replace(/\n/g, '<br>')        // Single line breaks become line breaks
         .replace(/\* /g, '• ')         // Convert bullet points
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Bold text
+        .replace(/\*([^*\n]+)\*/g, '<strong>$1</strong>') // Bold text with single asterisks
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Bold text with double asterisks
 
       // Simulate typing delay
       await new Promise(resolve => setTimeout(resolve, 1000));
