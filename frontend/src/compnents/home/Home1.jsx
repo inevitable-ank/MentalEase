@@ -3,25 +3,21 @@ import { useParams, Link } from 'react-router-dom';
 
 const Home1 = () => {
   const { username: usernameFromUrl } = useParams();
-  const [username, setUsername] = useState(null);
+  
+  // Initialize with default value to prevent loading flash
+  const [username, setUsername] = useState(() => {
+    if (usernameFromUrl) {
+      return usernameFromUrl;
+    }
+    return localStorage.getItem('tokenUser') || 'Guest';
+  });
 
   useEffect(() => {
-    if (usernameFromUrl) {
-      setUsername(usernameFromUrl); // Use username from URL if available
-    } else {
-      // Retrieve username from localStorage if not from URL
-      const storedUsername = localStorage.getItem('tokenUser');
-      if (storedUsername) {
-        setUsername(storedUsername); // Set the username from localStorage
-      } else {
-        setUsername('Guest'); // Fallback if no username is found
-      }
+    // Update username if URL changes
+    if (usernameFromUrl && usernameFromUrl !== username) {
+      setUsername(usernameFromUrl);
     }
-  }, [usernameFromUrl]);
-
-  if (username === null) {
-    return <div>Loading...</div>;
-  }
+  }, [usernameFromUrl, username]);
 
   return (
     <div className="relative isolate px-6 pt-14 lg:px-8 bg-gradient-to-r from-teal-100 to-blue-50 overflow-hidden">

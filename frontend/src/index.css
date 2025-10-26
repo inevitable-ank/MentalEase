@@ -15,3 +15,25 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Prevent layout shifts and improve loading experience */
+#root {
+  min-height: 100vh;
+}
+
+/* Smooth transitions for better UX */
+* {
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* Prevent flash of unstyled content */
+.app-container {
+  opacity: 0;
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
