@@ -37,8 +37,9 @@ const PrivateRoute = ({ children }) => {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
+    <div className="app-container">
+      <BrowserRouter>
+        <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/:username/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
         <Route path="/signup" element={<Signup />} />
@@ -62,8 +63,9 @@ function App() {
         <Route path="/:username/journals/:id/edit" element={<PrivateRoute><UpdateJournal /> </PrivateRoute>} />
 
         <Route path="*" element={<NotFound />} />
-      </Routes>
+        </Routes>
       </BrowserRouter>
+    </div>
   );
 }
 

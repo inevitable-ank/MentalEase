@@ -306,6 +306,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PhotoIcon } from '@heroicons/react/24/solid';
+import { API_ENDPOINTS } from '../../config/api';
 
 export default function Signup() {
     const [formData, setFormData] = useState({
@@ -321,6 +322,8 @@ export default function Signup() {
     const [profilePicture, setProfilePicture] = useState(null);
     const [error, setError] = useState('');
     const [missingDetailsError, setMissingDetailsError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -337,12 +340,17 @@ export default function Signup() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
+        setError('');
+        setMissingDetailsError('');
+        setSuccessMessage('');
 
         const requiredFields = ['username', 'password', 'name', 'email', 'gender', 'age'];
         const missingFields = requiredFields.filter(field => !formData[field]);
 
         if (missingFields.length > 0) {
             setMissingDetailsError('Please fill in all required fields.');
+            setIsLoading(false);
             return;
         }
 
@@ -355,7 +363,7 @@ export default function Signup() {
                 formDataWithFile.append('profilePicture', profilePicture);
             }
 
-            const response = await fetch('https://mentalease.onrender.com/signup', {
+            const response = await fetch(API_ENDPOINTS.SIGNUP, {
                 method: 'POST',
                 body: formDataWithFile,
             });
@@ -372,9 +380,18 @@ export default function Signup() {
 
             const data = await response.json();
             console.log('Signup successful:', data);
-            navigate('/login');
+            
+            setSuccessMessage('Account created successfully! Redirecting to login...');
+            
+            // Wait a moment to show success message before redirecting
+            setTimeout(() => {
+                navigate('/login');
+            }, 2000);
         } catch (error) {
             console.error('Error signing up:', error);
+            setError('An error occurred while creating your account. Please try again.');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -396,6 +413,10 @@ export default function Signup() {
     const closeModal = () => {
         setError('');
         setMissingDetailsError('');
+    };
+
+    const closeSuccessModal = () => {
+        setSuccessMessage('');
     };
 
     return (
@@ -421,6 +442,34 @@ export default function Signup() {
                         </div>
                         <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                             <button onClick={closeModal} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            
+            {successMessage && (
+                <div className="fixed inset-0 flex items-center justify-center z-50">
+                    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+                    <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+                        <div className="bg-green-100 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                            <div className="sm:flex sm:items-start">
+                                <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-200 sm:mx-0 sm:h-10 sm:w-10">
+                                    <svg className="h-6 w-6 text-green-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                    <h3 className="text-lg leading-6 font-medium text-gray-900">Success</h3>
+                                    <div className="mt-2">
+                                        <p className="text-sm text-gray-500">{successMessage}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                            <button onClick={closeSuccessModal} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
                                 Close
                             </button>
                         </div>
@@ -596,8 +645,19 @@ export default function Signup() {
                         </button>
                         <button
                             type="submit"
-                            className="rounded-md bg-indigo-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                            Save
+                            disabled={isLoading}
+                            className={`${isLoading ? 'bg-indigo-300 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-500'} rounded-md px-6 py-3 text-lg font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 flex items-center justify-center`}>
+                            {isLoading ? (
+                                <>
+                                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Creating Account...
+                                </>
+                            ) : (
+                                'Save'
+                            )}
                         </button>
                     </div>
                 </form>
