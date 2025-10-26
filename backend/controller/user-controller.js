@@ -32,17 +32,54 @@ export const userLogin = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Find user by username
-    const user = await User.findOne({ username });
+    // Find user by username with optimized query
+    const user = await User.findOne({ username }).select('+password');
 
-    // Check if user exists and if the password is correct
-    if (!user || !bcrypt.compareSync(password, user.password)) {
+    // Check if user exists
+    if (!user) {
       return res.status(401).json({ message: 'Invalid username or password' });
     }
 
+    // Use async bcrypt comparison for better performance
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid username or password' });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { 
+        id: user._id, 
+        username: user.username 
+      },
+      process.env.JWT_SECRET || 'MananShreya',
+      { expiresIn: '24h' }
+    );
+
+    console.log('Generated token:', token); // Debug log
+
+    // Remove password from user object before sending
+    const userWithoutPassword = {
+      _id: user._id,
+      username: user.username,
+      name: user.name,
+      email: user.email,
+      gender: user.gender,
+      age: user.age,
+      bio: user.bio,
+      profilePicture: user.profilePicture,
+      journals: user.journals
+    };
+
+    console.log('Sending response with token:', { user: userWithoutPassword, token }); // Debug log
+
     // Return user details and token
-    return res.status(200).json({ user });
+    return res.status(200).json({ 
+      user: userWithoutPassword,
+      token 
+    });
   } catch (error) {
+    console.error('Login error:', error);
     return res.status(500).json({ error: error.message });
   }
 };
