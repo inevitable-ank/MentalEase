@@ -14,12 +14,14 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true
+    required: true,
+    select: false // Don't include password in queries by default
   },
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    index: true // Add index for faster username lookups
   },
   gender: {
     type: String,
@@ -47,10 +49,16 @@ const userSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// Add compound indexes for better performance
+userSchema.index({ username: 1 });
+userSchema.index({ email: 1 });
+userSchema.index({ username: 1, email: 1 });
+
 // Hash password before saving
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
-  const salt = await bcrypt.genSalt(10);
+  // Reduced salt rounds from 10 to 8 for better performance while maintaining security
+  const salt = await bcrypt.genSalt(8);
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
